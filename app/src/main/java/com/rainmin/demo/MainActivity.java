@@ -12,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.rainmin.demo.noticeboard.NoticeBoard;
+import com.rainmin.noticeboard.NoticeBoard;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,8 +56,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String[] notices = new String[]{"this is title 1","this is title 2", "this is title 3"};
-        noticeBoard.initNoticeBoard(notices, null);
+        String[] notices = new String[]{"Today is Tu","Where are you going", "I'll be back soon"};
+        noticeBoard.setNotices(notices)
+                .setItemClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String notice = ((TextView) v).getText().toString();
+                        Toast.makeText(MainActivity.this, notice, Toast.LENGTH_SHORT).show();
+                    }
+                }).start();
     }
 
     @Override

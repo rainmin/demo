@@ -17,10 +17,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <com.rainmin.demo.noticeboard.NoticeBoard
+
+    <com.rainmin.noticeboard.NoticeBoard
         android:id="@+id/notice_board"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:padding="20dp"/>
+        android:padding="10dp"
+        android:background="@android:color/darker_gray"
+        app:flipInterval="3000"/>
 
 </android.support.constraint.ConstraintLayout>

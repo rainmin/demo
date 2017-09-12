@@ -43,3 +43,10 @@ captures/
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
+.idea/gradle.xml
+.idea/gradle.xml
+.idea/gradle.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/gradle.xml

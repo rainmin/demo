@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NoticeBoard">
+        <attr name="textColor" format="reference|color"/>
+        <attr name="textSize" format="float"/>
+        <attr name="flipInterval" format="integer"/>
+    </declare-styleable>
+</resources>
