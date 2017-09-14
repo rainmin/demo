@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.rainmin.noticeboard.NoticeBoard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -56,8 +59,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String[] notices = new String[]{"Today is Tu","Where are you going", "I'll be back soon"};
+        List<String> notices = new ArrayList<>(3);
+        notices.add("网络安全周最强厂商巡礼：腾讯安全生态舰队全军出击");
+        notices.add("高精地图对自动驾驶有多重要？和一般导航地图有何区别？");
+        notices.add("15部委：2020年全国基本实现车用乙醇汽油全覆盖");
         noticeBoard.setNotices(notices)
+                .setFlipInterval(2000)
+                .setTextSize(20)
                 .setItemClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
