@@ -1,8 +1,7 @@
 package com.rainmin.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,23 +11,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
 
-import com.rainmin.noticeboard.NoticeBoard;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.rainmin.demo.noticeboard.NoticeboardActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    @BindView(R.id.notice_board)
-    NoticeBoard noticeBoard;
+    @BindView(R.id.btn_notice_board)
+    Button btnNoticeboard;
     Unbinder mUnbinder;
 
     @Override
@@ -41,15 +36,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -59,20 +45,23 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        List<String> notices = new ArrayList<>(3);
-        notices.add("网络安全周最强厂商巡礼：腾讯安全生态舰队全军出击");
-        notices.add("高精地图对自动驾驶有多重要？和一般导航地图有何区别？");
-        notices.add("15部委：2020年全国基本实现车用乙醇汽油全覆盖");
-        noticeBoard.setNotices(notices)
-                .setFlipInterval(2000)
-                .setTextSize(20)
-                .setItemClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String notice = ((TextView) v).getText().toString();
-                        Toast.makeText(MainActivity.this, notice, Toast.LENGTH_SHORT).show();
-                    }
-                }).start();
+        initView();
+    }
+
+    public void initView() {
+        btnNoticeboard.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+        switch (viewId) {
+            case R.id.btn_notice_board:
+                startActivity(new Intent(this, NoticeboardActivity.class));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
