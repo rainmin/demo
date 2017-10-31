@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.rainmin.demo.noticeboard.NoticeboardActivity;
+import com.rainmin.demo.palette.PaletteActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,8 +23,8 @@ import butterknife.Unbinder;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    @BindView(R.id.btn_notice_board)
-    Button btnNoticeboard;
+    @BindView(R.id.btn_notice_board) Button btnNoticeboard;
+    @BindView(R.id.btn_palette) Button btnPalette;
     Unbinder mUnbinder;
 
     @Override
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     public void initView() {
         btnNoticeboard.setOnClickListener(this);
+        btnPalette.setOnClickListener(this);
     }
 
     @Override
@@ -59,10 +61,13 @@ public class MainActivity extends AppCompatActivity
             case R.id.btn_notice_board:
                 startActivity(new Intent(this, NoticeboardActivity.class));
                 break;
+            case R.id.btn_palette:
+                startActivity(new Intent(this, PaletteActivity.class));
+                break;
             default:
                 break;
         }
-    }
+}
 
     @Override
     public void onBackPressed() {
