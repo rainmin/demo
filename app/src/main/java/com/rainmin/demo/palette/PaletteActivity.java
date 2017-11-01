@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,6 +18,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import butterknife.BindView;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by chenming on 2017/10/30
@@ -93,16 +105,31 @@ public class PaletteActivity extends BaseActivity
                 }
                 mSaveProgressDlg.show();
 
-                Bitmap bm = mPaletteView.buildBitmap();
-                String savedFile = saveImage(bm, 100);
-                String message;
-                if (savedFile != null) {
-                    message = "save the palette successfully";
-                } else {
-                    message = "save the palette failed";
-                }
-                mSaveProgressDlg.dismiss();
-                Snackbar.make(mSave, message, Snackbar.LENGTH_SHORT).show();
+                Observable.create(new ObservableOnSubscribe<String>() {
+                    @Override
+                    public void subscribe(ObservableEmitter<String> e) throws Exception {
+                        Bitmap bm = mPaletteView.buildBitmap();
+                        String savedFile = saveImage(bm, 100);
+                        if (savedFile == null)
+                            savedFile = "fail";
+                        e.onNext(savedFile);
+                        e.onComplete();
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.newThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String savedFile) throws Exception {
+                                String message;
+                                if (TextUtils.equals(savedFile, "fail")) {
+                                    message = "save the palette failed";
+                                } else {
+                                    message = "save the palette successfully";
+                                }
+                                mSaveProgressDlg.dismiss();
+                                Snackbar.make(mSave, message, Snackbar.LENGTH_SHORT).show();
+                            }
+                        });
                 break;
             default:
                 break;

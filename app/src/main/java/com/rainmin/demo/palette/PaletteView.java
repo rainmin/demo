@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Xfermode;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -76,6 +77,10 @@ public class PaletteView extends View {
     public PaletteView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setDrawingCacheEnabled(true);
+        Drawable drawable = getBackground();
+        if (drawable == null) {
+            setBackgroundColor(Color.WHITE);
+        }
         init();
     }
 
@@ -90,6 +95,7 @@ public class PaletteView extends View {
         mPaint.setStrokeWidth(mDrawSize);
         mPaint.setColor(0XFF000000);
 
+        //生成图像混合对象
         mClearMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
     }
 
@@ -113,6 +119,7 @@ public class PaletteView extends View {
                 mPaint.setXfermode(null);
                 mPaint.setStrokeWidth(mDrawSize);
             } else {
+                //设置图像混合模式
                 mPaint.setXfermode(mClearMode);
                 mPaint.setStrokeWidth(mEraserSize);
             }
