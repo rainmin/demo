@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -28,19 +27,9 @@ public class PaletteView extends View {
         void onUndoRedoStatusChanged();
     }
 
-    private abstract static class DrawingInfo {
-        Paint paint;
-        abstract void draw(Canvas canvas);
-    }
-
-    private static class PathDrawingInfo extends DrawingInfo{
-
-        Path path;
-
-        @Override
-        void draw(Canvas canvas) {
-            canvas.drawPath(path, paint);
-        }
+    private class DrawPath {
+        public Path path;// 路径
+        public Paint paint;// 画笔
     }
 
     private Paint mPaint;
@@ -50,9 +39,10 @@ public class PaletteView extends View {
     private Bitmap mBufferBitmap;
     private Canvas mBufferCanvas;
     private static final int MAX_CACHE_STEP = 20;
+    private static final float TOUCH_TOLERANCE = 4;
 
-    private List<DrawingInfo> mDrawingList;
-    private List<DrawingInfo> mRemovedList;
+    private List<DrawPath> mDrawingList;
+    private List<DrawPath> mRemovedList;
 
     private Xfermode mClearMode;
     private float mDrawSize;
@@ -93,7 +83,7 @@ public class PaletteView extends View {
         mDrawSize = 10;
         mEraserSize = 40;
         mPaint.setStrokeWidth(mDrawSize);
-        mPaint.setColor(0XFF000000);
+        mPaint.setColor(Color.BLACK);
 
         //生成图像混合对象
         mClearMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
@@ -119,7 +109,7 @@ public class PaletteView extends View {
                 mPaint.setXfermode(null);
                 mPaint.setStrokeWidth(mDrawSize);
             } else {
-                //设置图像混合模式
+                //设置图像混合模式;
                 mPaint.setXfermode(mClearMode);
                 mPaint.setStrokeWidth(mEraserSize);
             }
@@ -146,8 +136,8 @@ public class PaletteView extends View {
     private void reDraw(){
         if (mDrawingList != null) {
             mBufferBitmap.eraseColor(Color.TRANSPARENT);
-            for (DrawingInfo drawingInfo : mDrawingList) {
-                drawingInfo.draw(mBufferCanvas);
+            for (DrawPath drawingInfo : mDrawingList) {
+                mBufferCanvas.drawPath(drawingInfo.path, drawingInfo.paint);
             }
             invalidate();
         }
@@ -164,7 +154,7 @@ public class PaletteView extends View {
     public void redo() {
         int size = mRemovedList == null ? 0 : mRemovedList.size();
         if (size > 0) {
-            DrawingInfo info = mRemovedList.remove(size - 1);
+            DrawPath info = mRemovedList.remove(size - 1);
             mDrawingList.add(info);
             mCanEraser = true;
             reDraw();
@@ -177,7 +167,7 @@ public class PaletteView extends View {
     public void undo() {
         int size = mDrawingList == null ? 0 : mDrawingList.size();
         if (size > 0) {
-            DrawingInfo info = mDrawingList.remove(size - 1);
+            DrawPath info = mDrawingList.remove(size - 1);
             if (mRemovedList == null) {
                 mRemovedList = new ArrayList<>(MAX_CACHE_STEP);
             }
@@ -224,7 +214,7 @@ public class PaletteView extends View {
         }
         Path cachePath = new Path(mPath);
         Paint cachePaint = new Paint(mPaint);
-        PathDrawingInfo info = new PathDrawingInfo();
+        DrawPath info = new DrawPath();
         info.path = cachePath;
         info.paint = cachePaint;
         mDrawingList.add(info);
@@ -239,6 +229,8 @@ public class PaletteView extends View {
         if (mBufferBitmap != null) {
             canvas.drawBitmap(mBufferBitmap, 0, 0, null);
         }
+        if (mPath != null && !mPath.isEmpty() && mMode == Mode.DRAW)
+            canvas.drawPath(mPath, mPaint);
     }
 
     @Override
@@ -248,34 +240,50 @@ public class PaletteView extends View {
         final float y = event.getY();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                performClick();
                 mLastX = x;
                 mLastY = y;
                 if (mPath == null) {
                     mPath = new Path();
                 }
                 mPath.moveTo(x,y);
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                //这里终点设为两点的中心点的目的在于使绘制的曲线更平滑，如果终点直接设置为x,y，效果和lineto是一样的,实际是折线效果
-                mPath.quadTo(mLastX, mLastY, (x + mLastX) / 2, (y + mLastY) / 2);
+                float dx = Math.abs(x - mLastX);
+                float dy = Math.abs(mLastY - y);
+                if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+                    // 这里终点设为两点的中心点的目的在于使绘制的曲线更平滑
+                    mPath.quadTo(mLastX, mLastY, (x + mLastX) / 2, (y + mLastY) / 2);
+                    if (mMode == Mode.ERASER && !mCanEraser) {
+                        break;
+                    }
+                    if (mMode == Mode.ERASER && mCanEraser){
+                        mBufferCanvas.drawPath(mPath, mPaint);
+                    }
+                    mLastX = x;
+                    mLastY = y;
+                    invalidate();
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                mPath.lineTo(mLastX, mLastY);
                 if (mBufferBitmap == null) {
                     initBuffer();
                 }
-                if (mMode == Mode.ERASER && !mCanEraser) {
-                    break;
-                }
-                mBufferCanvas.drawPath(mPath,mPaint);
-                invalidate();
-                mLastX = x;
-                mLastY = y;
-                break;
-            case MotionEvent.ACTION_UP:
+                mBufferCanvas.drawPath(mPath, mPaint);
                 if (mMode == Mode.DRAW || mCanEraser) {
                     saveDrawingPath();
                 }
                 mPath.reset();
+                invalidate();
                 break;
         }
         return true;
+    }
+
+    @Override
+    public boolean performClick() {
+        return super.performClick();
     }
 }
