@@ -25,6 +25,7 @@
             android:label="@string/title_activity_base" />
         <activity android:name=".noticeboard.NoticeboardActivity" />
         <activity android:name=".palette.PaletteActivity"/>
+        <activity android:name=".skillmap.SkillMapActivity"/>
     </application>
 
 </manifest>
