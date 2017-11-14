@@ -1,11 +1,11 @@
 package com.rainmin.demo.skillmap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 正多边形技能展示图
+ * 正多边形技能分布图
  * Created by chenming on 2017/11/10
  */
 
@@ -25,11 +25,12 @@ public class SkillMapView extends View {
 
     private int mSkillCount;  //技能数量或单个正多边形的顶点数
     private int mRadius;  //最外侧正多边形的半径
-    private int mIntervalCount;
+    private int mIntervalCount;  //层级数
     private float mAngle;  //夹角度数
     private List<List<PointF>> mPointArray;  //存储所有正多边形的顶点
     private Paint mLinePaint;
     private Paint mTextPaint;
+    private SkillBean mSkillBean;
 
     public SkillMapView(Context context) {
         this(context, null);
@@ -46,8 +47,11 @@ public class SkillMapView extends View {
         initPoints();
     }
 
+    /**
+     * 初始化画笔
+     */
     private void initPaint() {
-        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mLinePaint.setStrokeWidth(Utils.dp2pxF(getContext(), 2f));
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -56,13 +60,19 @@ public class SkillMapView extends View {
         mTextPaint.setTextSize(Utils.sp2pxF(getContext(), 15f));
     }
 
+    /**
+     * 初始化层级数，技能数，半径大小
+     */
     private void initSize() {
         mIntervalCount = 4;
-        mSkillCount = 5;
+        mSkillCount = SkillBean.skillNames.length;
         mRadius = Utils.dp2px(getContext(),100);
         mAngle = (float) (2 * Math.PI / mSkillCount);
     }
 
+    /**
+     * 计算各层级多边形的顶点坐标
+     */
     private void initPoints() {
         mPointArray = new ArrayList<>();
         float x;
@@ -77,6 +87,34 @@ public class SkillMapView extends View {
             }
             mPointArray.add(points);
         }
+    }
+
+    /**
+     * 初始化技能
+     * @param skillBean
+     */
+    public void setSkillBean(SkillBean skillBean) {
+        if (skillBean == null)
+            return;
+        mSkillBean = skillBean;
+        invalidate();
+    }
+
+    /**
+     * 更新技能值
+     * @param skillBean
+     */
+    public void updateSkillValue(SkillBean skillBean) {
+        if (mSkillBean == null)
+            return;
+
+        mSkillBean.setAttack(skillBean.getAttack());
+        mSkillBean.setDefense(skillBean.getDefense());
+        mSkillBean.setMagic(skillBean.getMagic());
+        mSkillBean.setTreat(skillBean.getTreat());
+        mSkillBean.setGold(skillBean.getGold());
+
+        invalidate();
     }
 
     @Override
@@ -98,9 +136,15 @@ public class SkillMapView extends View {
         canvas.translate(viewWidth / 2, viewHeight / 2);
 
         drawPolygons(canvas);
+        drawOutline(canvas);
+        drawSkillLine(canvas);
         drawText(canvas);
     }
 
+    /**
+     * 绘制各层级多边形并填充
+     * @param canvas
+     */
     private void drawPolygons(Canvas canvas) {
         canvas.save();
 
@@ -138,6 +182,80 @@ public class SkillMapView extends View {
         canvas.restore();
     }
 
+    /**
+     * 绘制多边形轮廓线
+     * @param canvas
+     */
+    private void drawOutline(Canvas canvas) {
+        canvas.save();
+        mLinePaint.setStyle(Paint.Style.STROKE);
+        mLinePaint.setColor(Color.parseColor("#99DCE2"));
+
+        Path path = new Path();
+        for (int i=0; i<mSkillCount; i++) {
+            float x = mPointArray.get(0).get(i).x;
+            float y = mPointArray.get(0).get(i).y;
+            if (i == 0) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
+        }
+        path.close();
+        canvas.drawPath(path, mLinePaint);
+        path.reset();
+
+        for (int i=0; i<mSkillCount; i++) {
+            float x = mPointArray.get(0).get(i).x;
+            float y = mPointArray.get(0).get(i).y;
+            canvas.drawLine(0, 0, x, y, mLinePaint);
+        }
+
+        canvas.restore();
+    }
+
+    /**
+     * 绘制技能分布线
+     * @param canvas
+     */
+    private void drawSkillLine(Canvas canvas) {
+        if (mSkillBean == null)
+            return;
+        canvas.save();
+
+        //计算各技能值的坐标
+        int[] allValues = mSkillBean.getSkillValues();
+        List<PointF> skillPoints = new ArrayList<>();
+        for (int i=0; i<mSkillCount; i++) {
+            float radius = mRadius * (allValues[i] / 100.0f);
+            float x = (float) (radius * Math.cos(i * mAngle - Math.PI /2));
+            float y = (float) (radius * Math.sin(i * mAngle - Math.PI / 2));
+            skillPoints.add(new PointF(x, y));
+        }
+
+        mLinePaint.setStyle(Paint.Style.STROKE);
+        mLinePaint.setStrokeWidth(Utils.dp2pxF(getContext(), 2));
+        mLinePaint.setColor(Color.RED);
+        Path path = new Path();
+        for (int i=0; i<mSkillCount; i++) {
+            float x = skillPoints.get(i).x;
+            float y = skillPoints.get(i).y;
+            if (i == 0) {
+                path.moveTo(x, y);
+            } else {
+                path.lineTo(x, y);
+            }
+        }
+        path.close();
+        canvas.drawPath(path, mLinePaint);
+
+        canvas.restore();
+    }
+
+    /**
+     * 绘制描述文字
+     * @param canvas
+     */
     private void drawText(Canvas canvas) {
         canvas.save();
 

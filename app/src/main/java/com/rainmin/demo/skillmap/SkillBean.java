@@ -21,6 +21,11 @@ public class SkillBean {
         this.gold = gold;
     }
 
+    public int[] getSkillValues() {
+        int[] allValues = {attack, defense, magic, treat, gold};
+        return allValues;
+    }
+
     public int getAttack() {
         return attack;
     }
