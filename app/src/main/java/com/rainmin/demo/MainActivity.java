@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import com.rainmin.demo.map.MapActivity;
 import com.rainmin.demo.noticeboard.NoticeboardActivity;
 import com.rainmin.demo.palette.PaletteActivity;
 import com.rainmin.demo.skillmap.SkillMapActivity;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.btn_notice_board) Button btnNoticeboard;
     @BindView(R.id.btn_palette) Button btnPalette;
     @BindView(R.id.btn_skill_map) Button btnSkillMap;
+    @BindView(R.id.btn_amap) Button btnMap;
     Unbinder mUnbinder;
 
     @Override
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         btnNoticeboard.setOnClickListener(this);
         btnPalette.setOnClickListener(this);
         btnSkillMap.setOnClickListener(this);
+        btnMap.setOnClickListener(this);
     }
 
     @Override
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.btn_skill_map:
                 startActivity(new Intent(this, SkillMapActivity.class));
+                break;
+            case R.id.btn_amap:
+                startActivity(new Intent(this, MapActivity.class));
                 break;
             default:
                 break;

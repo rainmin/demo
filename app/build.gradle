@@ -32,6 +32,12 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.7.0'
     compile "io.reactivex.rxjava2:rxjava:2.1.5"
     compile "io.reactivex.rxjava2:rxandroid:2.0.1"
+    //定位功能
+    compile 'com.amap.api:location:latest.integration'
+    //3D地图so及jar
+    compile 'com.amap.api:3dmap:latest.integration'
+    //搜索功能
+    compile 'com.amap.api:search:latest.integration'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 }
