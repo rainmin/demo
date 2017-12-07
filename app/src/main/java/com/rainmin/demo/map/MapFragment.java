@@ -1,6 +1,8 @@
 package com.rainmin.demo.map;
 
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -19,12 +21,16 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.TextOptions;
 import com.rainmin.demo.R;
 
 import butterknife.BindView;
@@ -54,27 +60,48 @@ public class MapFragment extends Fragment implements AMapLocationListener {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mEtSearch = (EditText)view.findViewById(R.id.et_search);
         mMapView = (MapView)view.findViewById(R.id.map);
+
+//        LatLng centerBJPoint = new LatLng(30.668526, 104.032933);
+//        AMapOptions mapOptions = new AMapOptions();
+//        mapOptions.camera(new CameraPosition(centerBJPoint, 10f, 0, 0));
+//        mMapView = new MapView(getActivity(), mapOptions);
         mMapView.onCreate(savedInstanceState);
 
-        initView();
+        initListener();
         initMap();
 
         return view;
     }
 
-    private void initView() {
+    private void initListener() {
         mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (!TextUtils.isEmpty(v.getText().toString().trim())) {
-                        LatLng latLng = new LatLng(106.570000, 27.390000);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 19));
-                        final Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("统子窝锰矿").snippet("DefaultMarker"));
+                        LatLng latLng = new LatLng(27.390000, 106.570000);
+                        LatLng latLng1 = new LatLng(27.400000, 106.580000);
+                        final Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title("统子窝锰矿"));
+                        final Marker marker1 = mMap.addMarker(new MarkerOptions().position(latLng1).title("煤子窝锰矿"));
+                        mMap.addText(new TextOptions() .position(latLng).text("统子窝锰矿")
+                                .fontSize(30).fontColor(Color.BLUE).backgroundColor(Color.GRAY));
+                        mMap.addText(new TextOptions().position(latLng1).text("煤子窝锰矿")
+                                .fontSize(30).fontColor(Color.BLUE).backgroundColor(Color.TRANSPARENT));
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                     }
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mEtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    getActivity().startActivity(new Intent(getActivity(), MapSearchActivity.class));
+                }
             }
         });
     }
@@ -83,15 +110,19 @@ public class MapFragment extends Fragment implements AMapLocationListener {
         if (mMap == null) {
             mMap = mMapView.getMap();
         }
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        UiSettings uiSettings = mMap.getUiSettings();
+        //隐藏定位按钮
+        uiSettings.setMyLocationButtonEnabled(false);
+        //隐藏logo
+        uiSettings.setLogoBottomMargin(-50);
 
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        //定位蓝点展现模式
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-        //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效
-        myLocationStyle.interval(2000);
-        mMap.setMyLocationStyle(myLocationStyle);
-        mMap.setMyLocationEnabled(true);
+//        MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        //定位蓝点展现模式
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);
+//        //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效
+//        myLocationStyle.interval(2000);
+//        mMap.setMyLocationStyle(myLocationStyle);
+//        mMap.setMyLocationEnabled(true);
 
         AMapLocationClientOption locationClientOption = new AMapLocationClientOption();
         //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式
@@ -111,8 +142,9 @@ public class MapFragment extends Fragment implements AMapLocationListener {
         mLocationClient.setLocationOption(locationClientOption);
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
-//        //启动定位
-//        mLocationClient.startLocation();
+
+        //移动地图中心到指定位置
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(27.703277, 106.94876), 10f));
     }
 
     @Override
@@ -138,8 +170,10 @@ public class MapFragment extends Fragment implements AMapLocationListener {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        mEtSearch.clearFocus();
+        //mEtSearch.setFocusable(false);
         //启动定位
-        mLocationClient.startLocation();
+        //mLocationClient.startLocation();
     }
 
     @Override

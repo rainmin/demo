@@ -24,7 +24,7 @@ public class SkillMapActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initCustomizedView(R.layout.activity_skillmap, "技能展示图");
+        initCustomizedView(R.layout.activity_skillmap, "技能展示图", true);
         skillBean = new SkillBean(98, 80, 75,50, 69);
         skillMapView.setSkillBean(skillBean);
         updateSkill.setOnClickListener(new View.OnClickListener() {

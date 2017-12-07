@@ -25,7 +25,7 @@ public class NoticeboardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initCustomizedView(R.layout.activity_noticeboard, "公告栏");
+        initCustomizedView(R.layout.activity_noticeboard, "公告栏", true);
         // init noticeboard
         List<String> notices = new ArrayList<>(3);
         notices.add("网络安全周最强厂商巡礼：腾讯安全生态舰队全军出击");

@@ -50,7 +50,7 @@ public class PaletteActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initCustomizedView(R.layout.activity_palette, "画板");
+        initCustomizedView(R.layout.activity_palette, "画板", true);
 
         mRedo.setOnClickListener(this);
         mUndo.setOnClickListener(this);
