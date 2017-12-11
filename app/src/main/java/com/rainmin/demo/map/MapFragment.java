@@ -24,6 +24,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -45,7 +46,7 @@ public class MapFragment extends Fragment implements AMapLocationListener {
     private AMap mMap;
     private AMapLocationClient mLocationClient;
 
-    MapView mMapView;
+    TextureMapView mMapView;
     EditText mEtSearch;
 
     public MapFragment() {
@@ -59,7 +60,7 @@ public class MapFragment extends Fragment implements AMapLocationListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mEtSearch = (EditText)view.findViewById(R.id.et_search);
-        mMapView = (MapView)view.findViewById(R.id.map);
+        mMapView = (TextureMapView)view.findViewById(R.id.map);
 
 //        LatLng centerBJPoint = new LatLng(30.668526, 104.032933);
 //        AMapOptions mapOptions = new AMapOptions();

@@ -33,6 +33,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="16dp"
             android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="10dp"
             android:hint="查找地点"
             android:background="@drawable/search_shape"
             android:imeOptions="actionSearch"
