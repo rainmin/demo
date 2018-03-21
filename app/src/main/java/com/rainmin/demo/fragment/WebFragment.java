@@ -1,6 +1,7 @@
 package com.rainmin.demo.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -15,8 +17,10 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.rainmin.demo.R;
+import com.rainmin.demo.palette.PaletteActivity;
 
 /**
  * Test WebView
@@ -84,6 +88,7 @@ public class WebFragment extends Fragment {
         webSettings.setJavaScriptEnabled(true);
         //允许JS弹窗
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        mWebView.addJavascriptInterface(new JsInteract(), "control");
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
@@ -94,6 +99,14 @@ public class WebFragment extends Fragment {
             public void onLoadResource(WebView view, String url) {
                 Log.d("nadia","load resource: " + url);
                 super.onLoadResource(view, url);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                // call JS code
+                String call = "javascript:callJs(\"you called JS code\")";
+                view.loadUrl(call);
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -117,5 +130,12 @@ public class WebFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    public class JsInteract {
+        @JavascriptInterface
+        public void toastMessage(String message) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

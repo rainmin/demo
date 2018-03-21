@@ -5,13 +5,14 @@
 <meta charset="utf-8">
 <title>Rainmin Chan</title>
 <script type="text/javascript">
-//Android需要调用的方法
-function callJS(){
-alert("Android调用了JS的callJS方法");
-}
-//调用Android的方法
-function callNative() {
-}
+    //native call the function to invoke JS alert()
+    function callJs(message){
+        alert(message)
+    }
+    //JS call the function to invoke native toastMessage()
+    function callNative() {
+        window.control.toastMessage("you called native code")
+    }
 </script>
 <body>
 <h1>this is a test demo</h1>
