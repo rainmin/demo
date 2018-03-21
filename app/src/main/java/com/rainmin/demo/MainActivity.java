@@ -2,8 +2,8 @@ package com.rainmin.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,25 +11,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
+import com.rainmin.demo.fragment.WebFragment;
 import com.rainmin.demo.map.MapActivity;
 import com.rainmin.demo.noticeboard.NoticeboardActivity;
 import com.rainmin.demo.palette.PaletteActivity;
 import com.rainmin.demo.skillmap.SkillMapActivity;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.btn_notice_board) Button btnNoticeboard;
-    @BindView(R.id.btn_palette) Button btnPalette;
-    @BindView(R.id.btn_skill_map) Button btnSkillMap;
-    @BindView(R.id.btn_amap) Button btnMap;
     Unbinder mUnbinder;
+    private WebFragment mWebFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,32 +50,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void initView() {
-        btnNoticeboard.setOnClickListener(this);
-        btnPalette.setOnClickListener(this);
-        btnSkillMap.setOnClickListener(this);
-        btnMap.setOnClickListener(this);
-    }
 
-    @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
-        switch (viewId) {
-            case R.id.btn_notice_board:
-                startActivity(new Intent(this, NoticeboardActivity.class));
-                break;
-            case R.id.btn_palette:
-                startActivity(new Intent(this, PaletteActivity.class));
-                break;
-            case R.id.btn_skill_map:
-                startActivity(new Intent(this, SkillMapActivity.class));
-                break;
-            case R.id.btn_amap:
-                startActivity(new Intent(this, MapActivity.class));
-                break;
-            default:
-                break;
-        }
-}
+    }
 
     @Override
     public void onBackPressed() {
@@ -119,18 +91,27 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        switch (id) {
+            case R.id.nav_notice_board:
+                startActivity(new Intent(this, NoticeboardActivity.class));
+                break;
+            case R.id.nav_palette:
+                startActivity(new Intent(this, PaletteActivity.class));
+                break;
+            case R.id.nav_skill_map:
+                startActivity(new Intent(this, SkillMapActivity.class));
+                break;
+            case R.id.nav_amap:
+                startActivity(new Intent(this, MapActivity.class));
+                break;
+            case R.id.nav_webview:
+                if (mWebFragment == null) {
+                    mWebFragment = new WebFragment();
+                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fm_content, mWebFragment);
+                transaction.commit();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

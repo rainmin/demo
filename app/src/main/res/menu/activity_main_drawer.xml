@@ -3,21 +3,25 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_notice_board"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:title="滚动公告栏" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:id="@+id/nav_palette"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="画板" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_skill_map"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="技能图" />
+        <item
+            android:id="@+id/nav_amap"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="高德地图" />
+        <item
+            android:id="@+id/nav_webview"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="WebView" />
     </group>
 
     <item android:title="Communicate">
