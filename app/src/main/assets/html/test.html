@@ -3,22 +3,32 @@
 
 <head>
 <meta charset="utf-8">
-<title>Rainmin Chan</title>
+<title>Test JS</title>
 <script type="text/javascript">
-    //native call the function to invoke JS alert()
+    // native will call the function
     function callJs(message){
-        alert(message)
+        document.getElementById("h1_content").innerHTML = message;
+        return "success";
     }
-    //JS call the function to invoke native toastMessage()
+    // JS will call native toastMessage()
     function callNative() {
-        window.control.toastMessage("you called native code")
+        window.control.toastMessage("you called native code");
+    }
+    // JS will call native through Prompt
+    function callNative2() {
+        var result = prompt("js://webview?arg1=rainmin&arg2=chan");
+        alert("result = " + result);
     }
 </script>
 <body>
-<h1>this is a test demo</h1>
-<input type="button" onclick="callNative()" value="Click Me" />
+    <h1 id="h1_content">this is a test demo</h1>
+    <p>
+        <input type="button" onclick="callNative()" value="Call Native through JsInterface" />
+    </p>
+    <p>
+        <input type="button" onclick="callNative2()" value="Call Native through Prompt" />
+    </p>
 </body>
-
 </head>
 
 </html>

@@ -2,6 +2,7 @@ package com.rainmin.demo.fragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -21,6 +24,9 @@ import android.widget.Toast;
 
 import com.rainmin.demo.R;
 import com.rainmin.demo.palette.PaletteActivity;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Test WebView
@@ -104,9 +110,16 @@ public class WebFragment extends Fragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                // call JS code
+                // call JS code by loadUrl()
                 String call = "javascript:callJs(\"you called JS code\")";
-                view.loadUrl(call);
+//                view.loadUrl(call);
+                // call JS code by evaluateJavascript()
+                view.evaluateJavascript(call, new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String value) {
+                        Toast.makeText(getActivity(), value, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -114,6 +127,25 @@ public class WebFragment extends Fragment {
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 Log.d("nadia","alert message: " + message);
                 return super.onJsAlert(view, url, message, result);
+            }
+
+            @Override
+            public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
+                // 一般根据scheme（协议格式） & authority（协议名）判断（前两个参数）
+                //假定传入进来的 url = "js://webview?arg1=rainmin&arg2=chan"（同时也是约定好的需要拦截的）
+                Uri uri = Uri.parse(message);
+                if (uri.getScheme().equals("js")) {
+                    if (uri.getAuthority().equals("webview")) {
+                        Set<String> paramNames = uri.getQueryParameterNames();
+                        Iterator<String> iter = paramNames.iterator();
+                        while (iter.hasNext()) {
+                            Log.d("nadia",uri.getQueryParameter(iter.next()));
+                        }
+                        result.confirm("you called native through prompt successfully");
+                    }
+                    return true;
+                }
+                return super.onJsPrompt(view, url, message, defaultValue, result);
             }
         });
         mWebView.loadUrl("file:///android_asset/html/test.html");
