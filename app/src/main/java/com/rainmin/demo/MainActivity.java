@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.rainmin.demo.fragment.WebFragment;
 import com.rainmin.demo.map.MapActivity;
+import com.rainmin.demo.nfc.NfcActivity;
 import com.rainmin.demo.noticeboard.NoticeboardActivity;
 import com.rainmin.demo.palette.PaletteActivity;
 import com.rainmin.demo.skillmap.SkillMapActivity;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_webview:
                         mSelectedItem = itemId;
                         break;
+                    case R.id.nav_nfc:
+                        mSelectedItem = itemId;
                 }
                 mIsItemCheck = true;
 
@@ -129,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.fm_content, mWebFragment);
                             transaction.commit();
+                            break;
+                        case R.id.nav_nfc:
+                            startActivity(new Intent(mContext, NfcActivity.class));
                             break;
                     }
                     mIsItemCheck = false;
