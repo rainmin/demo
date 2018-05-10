@@ -46,14 +46,31 @@
         <service android:name="com.amap.api.location.APSService" />
 
         <activity android:name=".map.MapSearchActivity" />
-        <activity android:name=".nfc.NfcActivity"
+        <activity
+            android:name=".nfc.NfcActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+
+        <receiver android:name=".receiver.WifiStateReceiver">
+            <intent-filter>
+
+                <!-- <action android:name="android.net.wifi.STATE_CHANGE"/> -->
+                <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/> -->
+                <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".service.UploadService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
+
 </manifest>
