@@ -26,6 +26,10 @@
             android:id="@+id/nav_nfc"
             android:icon="@drawable/ic_menu_gallery"
             android:title="NFC" />
+        <item
+            android:id="@+id/refresh_layout"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="下拉刷新"/>
     </group>
 
     <item android:title="Communicate">

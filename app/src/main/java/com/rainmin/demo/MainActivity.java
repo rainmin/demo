@@ -20,6 +20,7 @@ import com.rainmin.demo.map.MapActivity;
 import com.rainmin.demo.nfc.NfcActivity;
 import com.rainmin.demo.noticeboard.NoticeboardActivity;
 import com.rainmin.demo.palette.PaletteActivity;
+import com.rainmin.demo.refreshlayout.RefreshLayoutActivity;
 import com.rainmin.demo.skillmap.SkillMapActivity;
 
 import butterknife.ButterKnife;
@@ -89,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_nfc:
                         mSelectedItem = itemId;
+                        break;
+                    case R.id.refresh_layout:
+                        mSelectedItem = itemId;
+                        break;
                 }
                 mIsItemCheck = true;
 
@@ -136,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_nfc:
                             startActivity(new Intent(mContext, NfcActivity.class));
                             break;
+                        case R.id.refresh_layout:
+                            startActivity(new Intent(mContext, RefreshLayoutActivity.class));
                     }
                     mIsItemCheck = false;
                 }
