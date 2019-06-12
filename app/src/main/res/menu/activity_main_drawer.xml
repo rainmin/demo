@@ -3,33 +3,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_notice_board"
+            android:id="@+id/nav_simple"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="滚动公告栏" />
-        <item
-            android:id="@+id/nav_palette"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="画板" />
-        <item
-            android:id="@+id/nav_skill_map"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="技能图" />
-        <item
-            android:id="@+id/nav_amap"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="高德地图" />
-        <item
-            android:id="@+id/nav_webview"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="WebView" />
-        <item
-            android:id="@+id/nav_nfc"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="NFC" />
-        <item
-            android:id="@+id/refresh_layout"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="下拉刷新"/>
+            android:title="simple" />
     </group>
 
     <item android:title="Communicate">

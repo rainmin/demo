@@ -53,7 +53,7 @@ public class NfcActivity extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
-        setupViews();
+        initView();
         initNFCData();
     }
 
@@ -142,8 +142,7 @@ public class NfcActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void setupViews() {
-
+    private void initView() {
         promt = (TextView) findViewById(R.id.promt);
         readBtn = (Button) findViewById(R.id.read_btn);
         writeBtn = (Button) findViewById(R.id.write_btn);
@@ -156,6 +155,12 @@ public class NfcActivity extends AppCompatActivity implements View.OnClickListen
         deleteBtn.setOnClickListener(this);
     }
 
+    private void setButtonEnabled(boolean enabled) {
+        readBtn.setEnabled(enabled);
+        writeBtn.setEnabled(enabled);
+        deleteBtn.setEnabled(enabled);
+    }
+
     private void initNFCData() {
         // 初始化设备支持NFC功能
         isNFC_support = true;
@@ -166,18 +171,18 @@ public class NfcActivity extends AppCompatActivity implements View.OnClickListen
         // 判定设备是否支持NFC或启动NFC
         if (nfcAdapter == null) {
             metaInfo = "设备不支持NFC！";
-            Toast.makeText(this, metaInfo, Toast.LENGTH_SHORT).show();
             isNFC_support = false;
         }
-        if (!nfcAdapter.isEnabled()) {
+        if (nfcAdapter != null && !nfcAdapter.isEnabled()) {
             metaInfo = "请在系统设置中先启用NFC功能！";
-            Toast.makeText(this, metaInfo, Toast.LENGTH_SHORT).show();
             isNFC_support = false;
         }
 
-        if (isNFC_support == true) {
+        if (isNFC_support) {
+            setButtonEnabled(true);
             init_NFC();
         } else {
+            setButtonEnabled(false);
             promt.setTextColor(Color.RED);
             promt.setText(metaInfo);
         }

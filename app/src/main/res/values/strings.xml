@@ -1,9 +1,19 @@
 <resources>
     <string name="app_name">demo</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
     <string name="title_activity_base">BaseActivity</string>
+
+    <string name="notice_board">滚动公告栏</string>
+    <string name="palette">画板</string>
+    <string name="skill_map">技能图</string>
+    <string name="amap">高德地图</string>
+    <string name="web_view">WebView</string>
+    <string name="NFC">NFC</string>
+    <string name="pull_down_refresh">下拉刷新</string>
+    <string name="flow_layout">FlowLayout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grid_function_name">
+        <item>@string/notice_board</item>
+        <item>@string/palette</item>
+        <item>@string/skill_map</item>
+        <item>@string/amap</item>
+        <item>@string/web_view</item>
+        <item>@string/NFC</item>
+        <item>@string/pull_down_refresh</item>
+        <item>@string/flow_layout</item>
+    </string-array>
+</resources>

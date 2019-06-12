@@ -6,14 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class BaseActivity extends AppCompatActivity {
 
     FrameLayout frameLayout;
     Toolbar toolbar;
-    private Unbinder unbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +20,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (unbinder != null)
-            unbinder.unbind();
     }
 
     /**
@@ -41,8 +35,6 @@ public class BaseActivity extends AppCompatActivity {
         // add customized view
         View contentView = View.inflate(this, resId, null);
         frameLayout.addView(contentView);
-        // add annotation framework
-        unbinder = ButterKnife.bind(this);
         // init toolbar
         if (showToolbar) {
             toolbar.setTitle(title);

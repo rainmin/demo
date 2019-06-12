@@ -1,7 +1,5 @@
 package com.rainmin.demo.fragment;
 
-
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,9 +19,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import com.rainmin.demo.R;
-import com.rainmin.demo.palette.PaletteActivity;
 
 import java.util.Iterator;
 import java.util.Set;

@@ -7,11 +7,8 @@ import android.widget.ImageView;
 import com.rainmin.demo.BaseActivity;
 import com.rainmin.demo.R;
 
-import butterknife.BindView;
-
 public class MapSearchActivity extends BaseActivity {
 
-    @BindView(R.id.iv_back)
     ImageView mBack;
 
     @Override
@@ -19,6 +16,7 @@ public class MapSearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_map_search);
         initCustomizedView(R.layout.activity_map_search, "", false);
+        mBack = (ImageView) findViewById(R.id.iv_back);
         initListener();
     }
 

@@ -2,46 +2,54 @@ package com.rainmin.demo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.rainmin.demo.fragment.WebFragment;
-import com.rainmin.demo.map.MapActivity;
 import com.rainmin.demo.nfc.NfcActivity;
-import com.rainmin.demo.noticeboard.NoticeboardActivity;
 import com.rainmin.demo.palette.PaletteActivity;
-import com.rainmin.demo.refreshlayout.RefreshLayoutActivity;
-import com.rainmin.demo.skillmap.SkillMapActivity;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Unbinder mUnbinder;
-    private WebFragment mWebFragment;
     private int mSelectedItem;
     private boolean mIsItemCheck;
     private Context mContext;
+    private FunctionAdapter mAdapter;
+    private Paint mPaint;
+    private int mPaddingSize;
+    private int mMarginSize;
+    private RecyclerView rvFunction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mUnbinder = ButterKnife.bind(this);
         mContext = this;
-
+        rvFunction = (RecyclerView) findViewById(R.id.rv_function);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,7 +64,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
+        String[] functionNames = getResources().getStringArray(R.array.grid_function_name);
+        mAdapter = new FunctionAdapter(mContext, functionNames);
+        rvFunction.setAdapter(mAdapter);
+        rvFunction.setHasFixedSize(true);
+        mPaint = new Paint();
+        float textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20,
+                Resources.getSystem().getDisplayMetrics());
+        mPaint.setTextSize(textSize);
+        mPaddingSize = 20;
+        mMarginSize = 20;
+        Display defaultDisplay = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        defaultDisplay.getSize(point);
+        final int rvWidth = point.x;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, rvWidth);
+        //动态设置每个item的宽度
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                //计算文字加上padding与margin的宽度
+                int textWidth = (int) mPaint.measureText(mAdapter.getItem(position)) + (mPaddingSize + mMarginSize) * 2;
+                return textWidth > rvWidth ? rvWidth : textWidth;
+            }
+        });
+        rvFunction.setLayoutManager(gridLayoutManager);
     }
 
     private void initListener() {
@@ -73,26 +105,10 @@ public class MainActivity extends AppCompatActivity {
 
                 int itemId = item.getItemId();
                 switch (itemId) {
-                    case R.id.nav_notice_board:
+                    case R.id.nav_simple:
                         mSelectedItem = itemId;
                         break;
-                    case R.id.nav_palette:
-                        mSelectedItem = itemId;
-                        break;
-                    case R.id.nav_skill_map:
-                        mSelectedItem = itemId;
-                        break;
-                    case R.id.nav_amap:
-                        mSelectedItem = itemId;
-                        break;
-                    case R.id.nav_webview:
-                        mSelectedItem = itemId;
-                        break;
-                    case R.id.nav_nfc:
-                        mSelectedItem = itemId;
-                        break;
-                    case R.id.refresh_layout:
-                        mSelectedItem = itemId;
+                    default:
                         break;
                 }
                 mIsItemCheck = true;
@@ -118,31 +134,9 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerClosed(View drawerView) {
                 if (mIsItemCheck) {
                     switch (mSelectedItem) {
-                        case R.id.nav_notice_board:
-                            startActivity(new Intent(mContext, NoticeboardActivity.class));
+                        case R.id.nav_simple:
+                            showMessage("you clicked simple");
                             break;
-                        case R.id.nav_palette:
-                            startActivity(new Intent(mContext, PaletteActivity.class));
-                            break;
-                        case R.id.nav_skill_map:
-                            startActivity(new Intent(mContext, SkillMapActivity.class));
-                            break;
-                        case R.id.nav_amap:
-                            startActivity(new Intent(mContext, MapActivity.class));
-                            break;
-                        case R.id.nav_webview:
-                            if (mWebFragment == null) {
-                                mWebFragment = new WebFragment();
-                            }
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.fm_content, mWebFragment);
-                            transaction.commit();
-                            break;
-                        case R.id.nav_nfc:
-                            startActivity(new Intent(mContext, NfcActivity.class));
-                            break;
-                        case R.id.refresh_layout:
-                            startActivity(new Intent(mContext, RefreshLayoutActivity.class));
                     }
                     mIsItemCheck = false;
                 }
@@ -153,6 +147,33 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        mAdapter.setOnItemClickListener(new FunctionAdapter.OnItemClickListener() {
+            @Override
+            public void OnItemClick(FunctionAdapter adapter, View view, int position) {
+                String functionName = adapter.getItem(position);
+                showMessage(functionName);
+                if (TextUtils.equals(functionName, getString(R.string.notice_board))) {
+                    TestActivity.startTest(mContext, functionName);
+                } else if (TextUtils.equals(functionName, getString(R.string.palette))) {
+                    startActivity(new Intent(mContext, PaletteActivity.class));
+                } else if (TextUtils.equals(functionName, getString(R.string.skill_map))) {
+                    TestActivity.startTest(mContext, functionName);
+                } else if (TextUtils.equals(functionName, getString(R.string.amap))) {
+                    TestActivity.startTest(mContext, functionName);
+                } else if (TextUtils.equals(functionName, getString(R.string.web_view))) {
+                    TestActivity.startTest(mContext, functionName);
+                } else if (TextUtils.equals(functionName, getString(R.string.NFC))) {
+                    startActivity(new Intent(mContext, NfcActivity.class));
+                } else if (TextUtils.equals(functionName, getString(R.string.pull_down_refresh))) {
+                    TestActivity.startTest(mContext, functionName);
+                }
+            }
+        });
+    }
+
+    private void showMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -190,7 +211,68 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUnbinder != null)
-            mUnbinder.unbind();
+    }
+
+    static class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.FunctionHolder> {
+
+        private Context mContext;
+        private List<String> mData;
+        private FunctionAdapter mAdapter;
+        private OnItemClickListener mItemClickListener;
+
+        FunctionAdapter(Context context, String[] data) {
+            mContext = context;
+            mData = Arrays.asList(data);
+            mAdapter = this;
+        }
+
+        @Override
+        public FunctionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            TextView textView = new TextView(mContext);
+            textView.setTextSize(20);
+            textView.setTextColor(Color.BLUE);
+            textView.setBackground(mContext.getDrawable(R.drawable.selector_function_name));
+            GridLayoutManager.LayoutParams lp = new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(20, 20, 20, 0);
+            textView.setLayoutParams(lp);
+            return new FunctionHolder(textView);
+        }
+
+        @Override
+        public void onBindViewHolder(FunctionHolder holder, final int position) {
+            holder.textView.setText(mData.get(position));
+            holder.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mItemClickListener.OnItemClick(mAdapter, v, position);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mData.size();
+        }
+
+        String getItem(int position) {
+            return mData.get(position);
+        }
+
+        void setOnItemClickListener(OnItemClickListener listener) {
+            mItemClickListener = listener;
+        }
+
+        class FunctionHolder extends RecyclerView.ViewHolder {
+            TextView textView;
+            FunctionHolder(View view) {
+                super(view);
+                textView = (TextView) view;
+            }
+        }
+
+        public interface OnItemClickListener {
+            void OnItemClick(FunctionAdapter adapter, View view, int position);
+        }
     }
 }

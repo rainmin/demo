@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.rainmin.demo.BaseActivity;
 import com.rainmin.demo.R;
@@ -17,16 +16,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import butterknife.BindView;
-import io.reactivex.Flowable;
-import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -37,13 +30,13 @@ import io.reactivex.schedulers.Schedulers;
 public class PaletteActivity extends BaseActivity
         implements View.OnClickListener, PaletteView.Callback {
 
-    @BindView(R.id.palette) PaletteView mPaletteView;
-    @BindView(R.id.iv_redo) View mRedo;
-    @BindView(R.id.iv_undo) View mUndo;
-    @BindView(R.id.iv_pen) View mPen;
-    @BindView(R.id.iv_eraser) View mEraser;
-    @BindView(R.id.iv_clear) View mClear;
-    @BindView(R.id.iv_save) View mSave;
+    PaletteView mPaletteView;
+    View mRedo;
+    View mUndo;
+    View mPen;
+    View mEraser;
+    View mClear;
+    View mSave;
 
     private ProgressDialog mSaveProgressDlg;
 
@@ -51,6 +44,14 @@ public class PaletteActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initCustomizedView(R.layout.activity_palette, "画板", true);
+
+        mPaletteView = (PaletteView) findViewById(R.id.palette);
+        mRedo = findViewById(R.id.iv_redo);
+        mUndo = findViewById(R.id.iv_undo);
+        mPen = findViewById(R.id.iv_pen);
+        mEraser = findViewById(R.id.iv_eraser);
+        mClear = findViewById(R.id.iv_clear);
+        mSave = findViewById(R.id.iv_save);
 
         mRedo.setOnClickListener(this);
         mUndo.setOnClickListener(this);
