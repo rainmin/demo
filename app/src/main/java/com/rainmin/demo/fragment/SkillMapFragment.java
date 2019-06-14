@@ -8,11 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.rainmin.demo.R;
-import com.rainmin.demo.skillmap.SkillBean;
-import com.rainmin.demo.skillmap.SkillMapView;
+import com.rainmin.demo.widget.SkillBean;
+import com.rainmin.demo.widget.SkillMapView;
 
 import java.util.Random;
 
@@ -45,12 +44,9 @@ public class SkillMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Random random = new Random();
-                skillBean.setAttack(random.nextInt(100) + 1);
-                skillBean.setDefense(random.nextInt(100) + 1);
-                skillBean.setMagic(random.nextInt(100) + 1);
-                skillBean.setTreat(random.nextInt(100) + 1);
-                skillBean.setGold(random.nextInt(100) + 1);
-                skillMapView.updateSkillValue(skillBean);
+                SkillBean bean = new SkillBean(random.nextInt(100) + 1, random.nextInt(100) + 1,
+                        random.nextInt(100) + 1, random.nextInt(100) + 1, random.nextInt(100) + 1);
+                skillMapView.updateSkillValue(bean);
             }
         });
     }

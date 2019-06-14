@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.rainmin.demo.palette.PaletteView
+    <com.rainmin.demo.widget.PaletteView
         android:id="@+id/palette"
         android:layout_width="match_parent"
         android:layout_height="0dp"

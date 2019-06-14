@@ -1,4 +1,4 @@
-package com.rainmin.demo;
+package com.rainmin.demo.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 
+import com.rainmin.demo.R;
 import com.rainmin.demo.fragment.NoticeboardFragment;
+import com.rainmin.demo.fragment.PaletteFragment;
 import com.rainmin.demo.fragment.RefreshLayoutFragment;
 import com.rainmin.demo.fragment.SkillMapFragment;
 import com.rainmin.demo.fragment.WebFragment;
-import com.rainmin.demo.map.MapFragment;
+import com.rainmin.demo.fragment.MapFragment;
 
 public class TestActivity extends BaseActivity {
 
@@ -44,7 +46,7 @@ public class TestActivity extends BaseActivity {
         if (TextUtils.equals(functionName, getString(R.string.notice_board))) {
             fragment = new NoticeboardFragment();
         } else if (TextUtils.equals(functionName, getString(R.string.palette))) {
-            // TODO: 2019/6/12  
+            fragment = new PaletteFragment();
         } else if (TextUtils.equals(functionName, getString(R.string.skill_map))) {
             fragment = new SkillMapFragment();
         } else if (TextUtils.equals(functionName, getString(R.string.amap))) {
@@ -57,9 +59,11 @@ public class TestActivity extends BaseActivity {
             fragment = new RefreshLayoutFragment();
         }
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fl_content, fragment);
-        transaction.commit();
+        if (fragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fl_content, fragment);
+            transaction.commit();
+        }
     }
 
     public static void startTest(Context context, String functionName) {

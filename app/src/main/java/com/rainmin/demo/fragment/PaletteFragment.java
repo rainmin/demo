@@ -1,15 +1,20 @@
-package com.rainmin.demo.palette;
+package com.rainmin.demo.fragment;
+
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import com.rainmin.demo.BaseActivity;
 import com.rainmin.demo.R;
+import com.rainmin.demo.widget.PaletteView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,12 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by chenming on 2017/10/30
- */
-
-public class PaletteActivity extends BaseActivity
-        implements View.OnClickListener, PaletteView.Callback {
+public class PaletteFragment extends Fragment implements View.OnClickListener, PaletteView.Callback {
 
     PaletteView mPaletteView;
     View mRedo;
@@ -37,21 +37,29 @@ public class PaletteActivity extends BaseActivity
     View mEraser;
     View mClear;
     View mSave;
-
     private ProgressDialog mSaveProgressDlg;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initCustomizedView(R.layout.activity_palette, "画板", true);
+    public PaletteFragment() {
+        // Required empty public constructor
+    }
 
-        mPaletteView = (PaletteView) findViewById(R.id.palette);
-        mRedo = findViewById(R.id.iv_redo);
-        mUndo = findViewById(R.id.iv_undo);
-        mPen = findViewById(R.id.iv_pen);
-        mEraser = findViewById(R.id.iv_eraser);
-        mClear = findViewById(R.id.iv_clear);
-        mSave = findViewById(R.id.iv_save);
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_palette, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPaletteView = (PaletteView) view.findViewById(R.id.palette);
+        mRedo = view.findViewById(R.id.iv_redo);
+        mUndo = view.findViewById(R.id.iv_undo);
+        mPen = view.findViewById(R.id.iv_pen);
+        mEraser = view.findViewById(R.id.iv_eraser);
+        mClear = view.findViewById(R.id.iv_clear);
+        mSave = view.findViewById(R.id.iv_save);
 
         mRedo.setOnClickListener(this);
         mUndo.setOnClickListener(this);
@@ -63,19 +71,7 @@ public class PaletteActivity extends BaseActivity
         mPen.setSelected(true);
         mUndo.setEnabled(false);
         mRedo.setEnabled(false);
-        //mPaletteView.setMode(PaletteView.Mode.DRAW);
         mPaletteView.setCallback(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onUndoRedoStatusChanged() {
-        mUndo.setEnabled(mPaletteView.canUndo());
-        mRedo.setEnabled(mPaletteView.canRedo());
     }
 
     @Override
@@ -137,8 +133,14 @@ public class PaletteActivity extends BaseActivity
         }
     }
 
+    @Override
+    public void onUndoRedoStatusChanged() {
+        mUndo.setEnabled(mPaletteView.canUndo());
+        mRedo.setEnabled(mPaletteView.canRedo());
+    }
+
     private void initSaveDialog() {
-        mSaveProgressDlg = new ProgressDialog(this);
+        mSaveProgressDlg = new ProgressDialog(getActivity());
         mSaveProgressDlg.setMessage("It's saving, please waiting...");
         mSaveProgressDlg.setCancelable(false);
     }
@@ -174,5 +176,4 @@ public class PaletteActivity extends BaseActivity
         }
         return null;
     }
-
 }

@@ -1,10 +1,12 @@
-package com.rainmin.demo;
+package com.rainmin.demo.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.rainmin.demo.R;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -24,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * the inheriting class should call this function in onCreate, to add customized view
-     * and initialize ButterKnife
+     *
      * @param resId customized view id
      * @param title title displayed on toolbar
      */

@@ -1,4 +1,4 @@
-package com.rainmin.demo.map;
+package com.rainmin.demo.fragment;
 
 
 import android.content.Intent;
@@ -29,10 +29,8 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.TextOptions;
 import com.rainmin.demo.R;
+import com.rainmin.demo.activity.MapSearchActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MapFragment extends Fragment implements AMapLocationListener {
 
     private AMap mMap;

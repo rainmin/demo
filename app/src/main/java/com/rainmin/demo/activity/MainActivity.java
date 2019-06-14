@@ -1,4 +1,4 @@
-package com.rainmin.demo;
+package com.rainmin.demo.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +26,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rainmin.demo.nfc.NfcActivity;
-import com.rainmin.demo.palette.PaletteActivity;
+import com.rainmin.demo.R;
 
 import java.util.Arrays;
 import java.util.List;
@@ -153,19 +152,9 @@ public class MainActivity extends AppCompatActivity {
             public void OnItemClick(FunctionAdapter adapter, View view, int position) {
                 String functionName = adapter.getItem(position);
                 showMessage(functionName);
-                if (TextUtils.equals(functionName, getString(R.string.notice_board))) {
-                    TestActivity.startTest(mContext, functionName);
-                } else if (TextUtils.equals(functionName, getString(R.string.palette))) {
-                    startActivity(new Intent(mContext, PaletteActivity.class));
-                } else if (TextUtils.equals(functionName, getString(R.string.skill_map))) {
-                    TestActivity.startTest(mContext, functionName);
-                } else if (TextUtils.equals(functionName, getString(R.string.amap))) {
-                    TestActivity.startTest(mContext, functionName);
-                } else if (TextUtils.equals(functionName, getString(R.string.web_view))) {
-                    TestActivity.startTest(mContext, functionName);
-                } else if (TextUtils.equals(functionName, getString(R.string.NFC))) {
+                if (TextUtils.equals(functionName, getString(R.string.NFC))) {
                     startActivity(new Intent(mContext, NfcActivity.class));
-                } else if (TextUtils.equals(functionName, getString(R.string.pull_down_refresh))) {
+                } else {
                     TestActivity.startTest(mContext, functionName);
                 }
             }
@@ -236,18 +225,16 @@ public class MainActivity extends AppCompatActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             lp.setMargins(20, 20, 20, 0);
             textView.setLayoutParams(lp);
-            return new FunctionHolder(textView);
+
+            FunctionHolder holder = new FunctionHolder(textView);
+            bindViewClickListener(holder);
+
+            return holder;
         }
 
         @Override
         public void onBindViewHolder(FunctionHolder holder, final int position) {
             holder.textView.setText(mData.get(position));
-            holder.textView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mItemClickListener.OnItemClick(mAdapter, v, position);
-                }
-            });
         }
 
         @Override
@@ -261,6 +248,17 @@ public class MainActivity extends AppCompatActivity {
 
         void setOnItemClickListener(OnItemClickListener listener) {
             mItemClickListener = listener;
+        }
+
+        void bindViewClickListener(final FunctionHolder holder) {
+            if (mItemClickListener != null) {
+                holder.textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mItemClickListener.OnItemClick(mAdapter, v, holder.getAdapterPosition());
+                    }
+                });
+            }
         }
 
         class FunctionHolder extends RecyclerView.ViewHolder {

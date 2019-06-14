@@ -1,10 +1,9 @@
-package com.rainmin.demo.map;
+package com.rainmin.demo.activity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.rainmin.demo.BaseActivity;
 import com.rainmin.demo.R;
 
 public class MapSearchActivity extends BaseActivity {

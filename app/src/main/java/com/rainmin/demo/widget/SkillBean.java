@@ -1,4 +1,4 @@
-package com.rainmin.demo.skillmap;
+package com.rainmin.demo.widget;
 
 /**
  * Created by chenming on 2017/11/10

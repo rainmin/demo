@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.rainmin.demo.R;
-import com.rainmin.demo.refreshlayout.RefreshLayout;
+import com.rainmin.demo.widget.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;

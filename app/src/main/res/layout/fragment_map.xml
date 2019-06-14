@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="com.rainmin.demo.map.MapFragment">
+    tools:context="com.rainmin.demo.fragment.MapFragment">
 
     <com.amap.api.maps.TextureMapView
         android:id="@+id/map"

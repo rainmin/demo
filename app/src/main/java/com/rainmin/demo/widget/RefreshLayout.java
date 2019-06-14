@@ -1,4 +1,4 @@
-package com.rainmin.demo.refreshlayout;
+package com.rainmin.demo.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,7 +1,6 @@
-package com.rainmin.demo.nfc;
+package com.rainmin.demo.activity;
 
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,7 +19,6 @@ import android.nfc.tech.Ndef;
 import android.nfc.tech.NfcA;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;

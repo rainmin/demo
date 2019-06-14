@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.rainmin.demo.skillmap.SkillMapView
+    <com.rainmin.demo.widget.SkillMapView
         android:id="@+id/skill_map"
         android:layout_width="0dp"
         android:layout_height="300dp"
