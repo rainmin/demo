@@ -7,11 +7,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rainmin.demo.R;
+import com.rainmin.demo.utils.Utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -191,6 +194,15 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_device_id) {
+//            String ANDROID_ID = Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            String IMEI = Utils.getIMEI(getApplicationContext(), 0);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Your DEVICE_ID(IMEI) is:")
+                    .setMessage(IMEI)
+                    .create()
+                    .show();
             return true;
         }
 
