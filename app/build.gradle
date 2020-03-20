@@ -42,4 +42,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     //logger
     implementation 'com.orhanobut:logger:2.2.0'
+    //litepal
+    implementation 'org.litepal.android:java:3.0.0'
 }

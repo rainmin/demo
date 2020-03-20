@@ -13,6 +13,7 @@
     <string name="NFC">NFC</string>
     <string name="pull_down_refresh">下拉刷新</string>
     <string name="flow_layout">FlowLayout</string>
+    <string name="upload_file">上传文件</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

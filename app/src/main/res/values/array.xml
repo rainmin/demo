@@ -9,5 +9,6 @@
         <item>@string/NFC</item>
         <item>@string/pull_down_refresh</item>
         <item>@string/flow_layout</item>
+        <item>@string/upload_file</item>
     </string-array>
 </resources>

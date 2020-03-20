@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="demo.db" />
+    <storage value="external" />
+    <version value="1" />
+    <list>
+        <mapping class="com.rainmin.demo.model.bean.UploadLog" />
+    </list>
+</litepal>

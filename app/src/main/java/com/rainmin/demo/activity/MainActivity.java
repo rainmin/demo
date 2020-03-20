@@ -157,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 showMessage(functionName);
                 if (TextUtils.equals(functionName, getString(R.string.NFC))) {
                     startActivity(new Intent(mContext, NfcActivity.class));
+                } else if (TextUtils.equals(functionName, getString(R.string.upload_file))) {
+                    startActivity(new Intent(mContext, UploadFileActivity.class));
                 } else {
                     TestActivity.startTest(mContext, functionName);
                 }
