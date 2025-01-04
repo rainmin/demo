@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -35,8 +36,10 @@ public class UploadService extends Service {
     private static final String CHANNEL_NAME = "rainmin";
     public static final String ACTION_START_UPLOAD = "action_start_upload";
     public static final String ACTION_STOP_UPLOAD = "action_stop_upload";
+//    public static final String UPLOAD_FILE_PATH = "/storage/emulated/0/DCIM/Camera/VID_20200319_144821.mp4";
+    public static final String UPLOAD_FILE_PATH = Environment.getExternalStorageDirectory().getPath() + "/Download/cike.mkv";
     private static final int NOTIFY_ID_UPLOAD = 1993;
-    private static final String SERVER_HOST = "192.168.1.44";
+    private static final String SERVER_HOST = "192.168.1.4";
     private static final int SERVER_PORT = 7878;
 
     private PowerManager.WakeLock mWakeLock;
@@ -96,7 +99,7 @@ public class UploadService extends Service {
         if (intent != null) {
             String action = intent.getAction();
             if (TextUtils.equals(action, ACTION_START_UPLOAD)) {
-                File file = new File("/storage/emulated/0/DCIM/Camera/VID_20200319_144821.mp4");
+                File file = new File(UPLOAD_FILE_PATH);
                 if (file.exists()) {
                     uploadFile(file);
                 } else {
@@ -200,7 +203,7 @@ public class UploadService extends Service {
     }
 
     private void uploadFile(final File uploadFile) {
-        startForeground(NOTIFY_ID_UPLOAD, generateNotification("上传文件", "上传中"));
+        startForeground(NOTIFY_ID_UPLOAD, generateNotification("上传文件", "上传中0%"));
         new Thread(new Runnable() {
 
             @Override
@@ -226,7 +229,7 @@ public class UploadService extends Service {
                     }
                     RandomAccessFile fileOutStream = new RandomAccessFile(uploadFile, "r");
                     fileOutStream.seek(Long.parseLong(position));
-                    byte[] buffer = new byte[1024 * 10];
+                    byte[] buffer = new byte[1024];
                     int len = -1;
                     long length = Long.parseLong(position);
                     int lastProgress = 0;
@@ -236,14 +239,13 @@ public class UploadService extends Service {
                         outStream.write(buffer, 0, len);
                         length += len;
                         currentProgress = (int) (length * 100 / uploadFile.length());
-//                        LogUtils.d("current progress is: " + currentProgress + "%");
-                        Log.d("chenming", "current progress is: " + currentProgress + "%");
                         if ((currentProgress - lastProgress) >= 1) {
                             lastProgress = currentProgress;
                             Message msg = new Message();
                             msg.what = 119;
                             msg.getData().putInt("size", currentProgress);
                             mHandler.sendMessage(msg);
+                            Log.d("chenming", "current progress is: " + currentProgress + "%");
                         }
                     }
                     fileOutStream.close();
